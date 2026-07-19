@@ -3,13 +3,14 @@
     "step": {
       "user": {
         "title": "GeoSphere Warn",
-        "description": "GeoSphere Austria Warnungen konfigurieren.",
+        "description": "Gemeindekennzahl eingeben",
         "data": {
-          "gkz": "Gemeindekennzahl"
+          "gkz": "Gemeindekennzahl (GKZ)"
         }
       }
     },
     "error": {
+      "invalid_gkz": "Ungültige Gemeindekennzahl.",
       "cannot_connect": "Verbindung zur GeoSphere API fehlgeschlagen."
     },
     "abort": {
