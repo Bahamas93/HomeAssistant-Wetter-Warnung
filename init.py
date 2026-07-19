@@ -4,7 +4,10 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN, CONF_GKZ
 from .coordinator import GeoSphereWarnCoordinator
 
-PLATFORMS = ["sensor"]
+PLATFORMS = [
+    "sensor",
+    "binary_sensor",
+]
 
 
 async def async_setup_entry(
