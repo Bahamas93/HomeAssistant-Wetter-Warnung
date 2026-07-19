@@ -2,13 +2,18 @@
   "config": {
     "step": {
       "user": {
-        "title": "GeoSphere Warnungen",
-        "description": "Gemeinde konfigurieren",
+        "title": "GeoSphere Warn",
+        "description": "GeoSphere Austria Warnungen konfigurieren.",
         "data": {
-          "gkz": "Gemeindekennzahl",
-          "name": "Name"
+          "gkz": "Gemeindekennzahl"
         }
       }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zur GeoSphere API fehlgeschlagen."
+    },
+    "abort": {
+      "already_configured": "Diese Gemeinde wurde bereits eingerichtet."
     }
   }
 }
