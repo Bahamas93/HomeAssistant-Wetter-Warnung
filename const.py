@@ -1,25 +1,16 @@
+from datetime import timedelta
+
 DOMAIN = "geosphere_warn"
 
 CONF_GKZ = "gkz"
 
-SCAN_INTERVAL = 300
-
 API_URL = "https://warnungen.zamg.at/wsapp/api/getWarnstatus"
+
+UPDATE_INTERVAL = timedelta(minutes=5)
 
 LEVELS = {
     0: "green",
     1: "yellow",
     2: "orange",
     3: "red",
-}
-
-WARNING_TYPES = {
-    1: "Wind",
-    2: "Snow",
-    3: "Rain",
-    4: "Cold",
-    5: "Thunderstorm",
-    6: "Heat",
-    7: "Ice",
-    8: "Fog",
 }
