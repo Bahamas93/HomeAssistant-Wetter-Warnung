@@ -2,26 +2,54 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
 
 import aiohttp
 
-from .const import API_URL, LEVELS
+from .const import API_URL, LEVEL_NAMES
+
+
+@dataclass(slots=True)
+class Warning:
+    """Eine einzelne Warnung."""
+
+    warnid: str
+    level: int
+    level_name: str
+    wtype: int
+    start: datetime
+    end: datetime
+
+
+@dataclass(slots=True)
+class WarningStatus:
+    """Alle Warnungen der Gemeinde."""
+
+    active: bool
+    highest: Warning | None
+    warnings: list[Warning]
+
+    @property
+    def count(self) -> int:
+        return len(self.warnings)
 
 
 class GeoSphereApi:
-    """Client for the GeoSphere warning API."""
+    """GeoSphere API Client."""
 
     def __init__(
         self,
         session: aiohttp.ClientSession,
         gkz: str,
     ) -> None:
+
         self._session = session
         self._gkz = str(gkz)
 
-    async def async_get_warnings(self) -> dict[str, Any]:
-        """Return all warnings for the configured municipality."""
+    async def async_get_warnings(self) -> WarningStatus:
+        """Liest alle Warnungen für die konfigurierte Gemeinde."""
 
         async with self._session.get(
             API_URL,
@@ -31,51 +59,47 @@ class GeoSphereApi:
 
             response.raise_for_status()
 
-            payload = await response.json()
+            payload: dict[str, Any] = await response.json()
 
-        warnings: list[dict[str, Any]] = []
+        warnings: list[Warning] = []
 
         for feature in payload.get("features", []):
 
-            properties = feature.get("properties", {})
+            props = feature.get("properties", {})
 
-            if self._gkz not in properties.get("gemeinden", []):
+            if self._gkz not in props.get("gemeinden", []):
                 continue
 
-            level = int(properties.get("wlevel", 0))
+            level = int(props.get("wlevel", 0))
 
-            warning = {
-                "warnid": properties.get("warnid"),
-                "type": int(properties.get("wtype", 0)),
-                "level": level,
-                "color": LEVELS.get(level, "unknown"),
-                "start": int(properties.get("start", 0)),
-                "end": int(properties.get("end", 0)),
-            }
+            warnings.append(
+                Warning(
+                    warnid=props["warnid"],
+                    level=level,
+                    level_name=LEVEL_NAMES.get(level, "unknown"),
+                    wtype=int(props["wtype"]),
+                    start=datetime.fromtimestamp(
+                        int(props["start"])
+                    ),
+                    end=datetime.fromtimestamp(
+                        int(props["end"])
+                    ),
+                )
+            )
 
-            warnings.append(warning)
+        if warnings:
 
-        if not warnings:
+            highest = max(
+                warnings,
+                key=lambda warning: warning.level,
+            )
 
-            return {
-                "active": False,
-                "highest_level": 0,
-                "highest_color": "green",
-                "highest_type": None,
-                "warning_count": 0,
-                "warnings": [],
-            }
+        else:
 
-        highest = max(
-            warnings,
-            key=lambda item: item["level"],
+            highest = None
+
+        return WarningStatus(
+            active=bool(warnings),
+            highest=highest,
+            warnings=warnings,
         )
-
-        return {
-            "active": True,
-            "highest_level": highest["level"],
-            "highest_color": highest["color"],
-            "highest_type": highest["type"],
-            "warning_count": len(warnings),
-            "warnings": warnings,
-        }
