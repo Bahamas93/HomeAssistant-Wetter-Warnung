@@ -2,10 +2,10 @@
   "domain": "geosphere_warn",
   "name": "GeoSphere Warn",
   "version": "1.0.0",
-  "documentation": "https://github.com/<dein-github>/geosphere_warn",
-  "issue_tracker": "https://github.com/<dein-github>/geosphere_warn/issues",
+  "documentation": "https://github.com/patrick/geosphere_warn",
+  "issue_tracker": "https://github.com/patrick/geosphere_warn/issues",
   "codeowners": [
-    "@<dein-github>"
+    "@patrick"
   ],
   "config_flow": true,
   "integration_type": "hub",
