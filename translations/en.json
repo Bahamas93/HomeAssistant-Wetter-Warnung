@@ -2,13 +2,18 @@
   "config": {
     "step": {
       "user": {
-        "title": "GeoSphere Warnings",
-        "description": "Enter municipality code.",
+        "title": "GeoSphere Warning",
+        "description": "Enter the municipality code.",
         "data": {
-          "gkz": "Municipality",
-          "name": "Name"
+          "gkz": "Municipality Code"
         }
       }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to GeoSphere API."
+    },
+    "abort": {
+      "already_configured": "Municipality already configured."
     }
   }
 }
