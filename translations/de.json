@@ -1,0 +1,14 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "GeoSphere Warnungen",
+        "description": "Bitte die Gemeindekennzahl eingeben.",
+        "data": {
+          "gkz": "GKZ",
+          "name": "Name"
+        }
+      }
+    }
+  }
+}
