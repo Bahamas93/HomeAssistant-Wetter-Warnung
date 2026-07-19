@@ -20,7 +20,7 @@ class GeoSphereApi:
         self._session = session
         self._gkz = str(gkz)
 
-    async def async_get_warning(self) -> dict[str, Any]:
+    async def async_get_warnings(self) -> dict[str, Any]:
         """Return all warnings for the configured municipality."""
 
         async with self._session.get(
