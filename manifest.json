@@ -1,0 +1,15 @@
+{
+  "domain": "geosphere_warn",
+  "name": "GeoSphere Warn",
+  "codeowners": [
+    "@patrick"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/patrick/geosphere_warn",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/patrick/geosphere_warn/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}
