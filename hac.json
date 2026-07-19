@@ -1,0 +1,10 @@
+{
+  "name": "GeoSphere Warn",
+  "country": [
+    "AT"
+  ],
+  "homeassistant": "2026.6.0",
+  "render_readme": true,
+  "content_in_root": false,
+  "zip_release": false
+}
