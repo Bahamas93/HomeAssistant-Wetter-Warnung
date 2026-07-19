@@ -56,7 +56,7 @@ SENSORS = (
         name="Warning Start",
         device_class=SensorDeviceClass.TIMESTAMP,
         value_fn=lambda data: (
-            datetime.fromtimestamp(data["warnings"][0]["start"])
+            datetime.fromtimestamp(data["highest"]["start"])
             if data["warnings"]
             else None
         ),
@@ -66,7 +66,7 @@ SENSORS = (
         name="Warning End",
         device_class=SensorDeviceClass.TIMESTAMP,
         value_fn=lambda data: (
-            datetime.fromtimestamp(data["warnings"][0]["end"])
+            datetime.fromtimestamp(data["highest"]["end"])
             if data["warnings"]
             else None
         ),
