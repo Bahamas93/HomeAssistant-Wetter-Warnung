@@ -1,21 +1,35 @@
+"""The GeoSphere Warn integration."""
+
+from __future__ import annotations
+
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, CONF_GKZ
-from .coordinator import GeoSphereWarnCoordinator
+from .const import CONF_GKZ, DOMAIN
+from .coordinator import GeoSphereCoordinator
 
-PLATFORMS = [
-    "sensor",
-    "binary_sensor",
+PLATFORMS: list[Platform] = [
+    Platform.SENSOR,
+    Platform.BINARY_SENSOR,
 ]
+
+
+async def async_setup(
+    hass: HomeAssistant,
+    config: dict,
+) -> bool:
+    """Set up the integration."""
+    return True
 
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
 ) -> bool:
+    """Set up GeoSphere Warn from a config entry."""
 
-    coordinator = GeoSphereWarnCoordinator(
+    coordinator = GeoSphereCoordinator(
         hass,
         entry.data[CONF_GKZ],
     )
@@ -37,6 +51,7 @@ async def async_unload_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
 ) -> bool:
+    """Unload a config entry."""
 
     unload_ok = await hass.config_entries.async_unload_platforms(
         entry,
