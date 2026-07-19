@@ -13,8 +13,6 @@ LEVELS = {
     3: "red",
 }
 
-# Die Zuordnung der wtype-Werte bitte noch anhand der
-# offiziellen GeoSphere-Dokumentation verifizieren.
 WARNING_TYPES = {
     1: "Wind",
     2: "Snow",
