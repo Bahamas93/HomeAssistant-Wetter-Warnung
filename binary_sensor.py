@@ -1,0 +1,6 @@
+binary_sensor.gewitter
+binary_sensor.sturm
+binary_sensor.regen
+binary_sensor.schnee
+binary_sensor.eis
+binary_sensor.hitze
