@@ -35,7 +35,7 @@ class GeoSphereCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
 
         try:
-            return await self.api.async_get_warning()
+            return await self.api.async_get_warnings()
 
         except Exception as err:
             raise UpdateFailed(err) from err
