@@ -2,131 +2,73 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Callable
 
 from homeassistant.components.sensor import (
+    SensorDeviceClass,
     SensorEntity,
+    SensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-)
 
 from .const import DOMAIN
-
-LEVELS = {
-    0: "green",
-    1: "yellow",
-    2: "orange",
-    3: "red",
-}
+from .entity import GeoSphereEntity
 
 
-async def async_setup_entry(
-    hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
-):
+@dataclass(frozen=True, kw_only=True)
+class GeoSphereSensorDescription(SensorEntityDescription):
+    """GeoSphere sensor description."""
 
-    coordinator = hass.data[DOMAIN][entry.entry_id]
-
-    async_add_entities(
-        [
-            WarningLevelSensor(coordinator),
-            WarningColorSensor(coordinator),
-            WarningTypeSensor(coordinator),
-            WarningCountSensor(coordinator),
-            WarningStartSensor(coordinator),
-            WarningEndSensor(coordinator),
-        ]
-    )
+    value_fn: Callable[[dict[str, Any]], Any]
 
 
-class BaseWarningSensor(CoordinatorEntity, SensorEntity):
-
-    _attr_has_entity_name = True
-
-    def __init__(self, coordinator):
-
-        super().__init__(coordinator)
-
-
-class WarningLevelSensor(BaseWarningSensor):
-
-    _attr_name = "Level"
-    _attr_unique_id = "geosphere_warning_level"
-
-    @property
-    def native_value(self):
-
-        return self.coordinator.data["highest_level"]
-
-
-class WarningColorSensor(BaseWarningSensor):
-
-    _attr_name = "Color"
-    _attr_unique_id = "geosphere_warning_color"
-
-    @property
-    def native_value(self):
-
-        return self.coordinator.data["highest_color"]
-
-
-class WarningTypeSensor(BaseWarningSensor):
-
-    _attr_name = "Type"
-    _attr_unique_id = "geosphere_warning_type"
-
-    @property
-    def native_value(self):
-
-        return self.coordinator.data["highest_type_name"]
-
-
-class WarningCountSensor(BaseWarningSensor):
-
-    _attr_name = "Warning Count"
-    _attr_unique_id = "geosphere_warning_count"
-
-    @property
-    def native_value(self):
-
-        return self.coordinator.data["warning_count"]
-
-
-class WarningStartSensor(BaseWarningSensor):
-
-    _attr_name = "Start"
-    _attr_unique_id = "geosphere_warning_start"
-    _attr_device_class = "timestamp"
-
-    @property
-    def native_value(self):
-
-        warnings = self.coordinator.data["warnings"]
-
-        if not warnings:
-            return None
-
-        return datetime.fromtimestamp(warnings[0]["start"])
-
-
-class WarningEndSensor(BaseWarningSensor):
-
-    _attr_name = "End"
-    _attr_unique_id = "geosphere_warning_end"
-    _attr_device_class = "timestamp"
-
-    @property
-    def native_value(self):
-
-        warnings = self.coordinator.data["warnings"]
-
-        if not warnings:
-            return None
-
-        return datetime.fromtimestamp(warnings[0]["end"])
+SENSORS = (
+    GeoSphereSensorDescription(
+        key="highest_level",
+        name="Warning Level",
+        icon="mdi:alert",
+        value_fn=lambda data: data["highest_level"],
+    ),
+    GeoSphereSensorDescription(
+        key="highest_color",
+        name="Warning Color",
+        icon="mdi:palette",
+        value_fn=lambda data: data["highest_color"],
+    ),
+    GeoSphereSensorDescription(
+        key="highest_type",
+        name="Warning Type",
+        icon="mdi:weather-lightning",
+        value_fn=lambda data: data["highest_type"],
+    ),
+    GeoSphereSensorDescription(
+        key="warning_count",
+        name="Warning Count",
+        icon="mdi:counter",
+        value_fn=lambda data: data["warning_count"],
+    ),
+    GeoSphereSensorDescription(
+        key="warning_start",
+        name="Warning Start",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=lambda data: (
+            datetime.fromtimestamp(data["warnings"][0]["start"])
+            if data["warnings"]
+            else None
+        ),
+    ),
+    GeoSphereSensorDescription(
+        key="warning_end",
+        name="Warning End",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=lambda data: (
+            datetime.fromtimestamp(data["warnings"][0]["end"])
+            if data["warnings"]
+            else None
+        ),
+    ),
+)
